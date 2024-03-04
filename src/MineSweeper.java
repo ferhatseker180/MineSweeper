@@ -39,7 +39,6 @@ public class MineSweeper {
             System.out.println("Error: " + e);
         }
 
-
     }
 
     // Row and column information is received from the user and the number of mines is determined according to this information.
