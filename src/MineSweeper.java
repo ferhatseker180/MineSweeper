@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -9,7 +10,7 @@ public class MineSweeper {
     int rowNumber;
     int colNumber;
     int mineCount;
-    ArrayList<Integer> mayinRow = new ArrayList<>();
+     ArrayList<Integer> mayinRow = new ArrayList<>();
     ArrayList<Integer> mayinCol = new ArrayList<>();
     String closeSquare = "-";
     String mineSquare = "*";
@@ -40,24 +41,6 @@ public class MineSweeper {
 
         } while ((rowNumber < 2 || colNumber < 2));
 
-    }
-
-    // Function that asks the row and column information that the user wants to select in the game
-    public void takeUsersAnswer() {
-        do {
-
-            System.out.print("Satır Sayısını Giriniz: ");
-            rowNumber = input.nextInt();
-            System.out.print("Sütun Sayısını Giriniz: ");
-            colNumber = input.nextInt();
-            System.out.println("===========================");
-
-            // It is checked whether the row and column value entered by the user is within the specified range.
-            if ((rowNumber < userBoard.length) && (colNumber < userBoard[0].length)) {
-                checkUserInput(rowNumber, colNumber);
-            }
-
-        } while (rowNumber >= userBoard.length || colNumber >= userBoard[0].length);
     }
 
     // In the random function, a random value is first generated and then it is assigned to randomRow and randomCol values to assign randomness to the row and column.
@@ -109,14 +92,39 @@ public class MineSweeper {
         createUserBoard();
     }
 
-    public void checkUserInput(int row, int col) {
-        int count = countNeighborMines(row, col);
+    //A welcome message was printed for the user with the createUserBoard function and the user board designed for the user was written in this function.
 
-        if (mineBoard[row][col] == mineSquare) {
-            System.out.println("Game Over! Mayına bastınız.");
-        } else {
-            System.out.println("Seçtiğiniz kutuda " + count + " adet mayın var.");
+    public void createUserBoard() {
+        System.out.println("========== Welcome to MineSweeper Game ==========");
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < colNumber; j++) {
+                if (userBoard[i][j] == mineSquare) {
+                    System.out.print(closeSquare + " ");
+                } else {
+                    System.out.print(closeSquare + " ");
+                }
+            }
+            System.out.println();
         }
+        takeUsersAnswer();
+    }
+
+    // Function that asks the row and column information that the user wants to select in the game
+    public void takeUsersAnswer() {
+        do {
+
+            System.out.print("Satır Sayısını Giriniz: ");
+            rowNumber = input.nextInt();
+            System.out.print("Sütun Sayısını Giriniz: ");
+            colNumber = input.nextInt();
+            System.out.println("===========================");
+
+            // It is checked whether the row and column value entered by the user is within the specified range.
+            if ((rowNumber < userBoard.length) && (colNumber < userBoard[0].length)) {
+                checkUserInput(rowNumber, colNumber);
+            }
+
+        } while (rowNumber >= userBoard.length || colNumber >= userBoard[0].length);
     }
 
     public int countNeighborMines(int row, int col) {
@@ -140,22 +148,33 @@ public class MineSweeper {
     }
 
 
-    //A welcome message was printed for the user with the createUserBoard function and the user board designed for the user was written in this function.
+    public void checkUserInput(int row, int col) {
+        int count = countNeighborMines(row, col);
 
-    public void createUserBoard() {
-        System.out.println("========== Welcome to MineSweeper Game ==========");
-        for (int i = 0; i < rowNumber; i++) {
-            for (int j = 0; j < colNumber; j++) {
+        if (mineBoard[row][col] == mineSquare) {
+            System.out.println("Game Over! Mayına bastınız.");
+        } else {
+            System.out.println("Seçtiğiniz kutuda " + count + " adet mayın var.");
+            userBoard[row][col] = Integer.toString(count);
+            updateBoard(userBoard, count);
+        }
+    }
+
+    public void updateBoard(String[][] userBoard, int count){
+        for (int i=0; i< userBoard.length; i++){
+            for (int j=0; j<userBoard[0].length; j++){
+
                 if (userBoard[i][j] == mineSquare) {
                     System.out.print(closeSquare + " ");
-                } else {
-                    System.out.print(closeSquare + " ");
+                }
+                else {
+                    System.out.print(userBoard[i][j] + " ");
                 }
             }
             System.out.println();
         }
-        takeUsersAnswer();
     }
+
 
     public void runGame() {
         createMineBoard();
