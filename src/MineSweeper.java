@@ -134,25 +134,18 @@ public class MineSweeper {
 
                 // As you check each square around, see if it's moving out of area.
 
-                //   if(newRow>=0 && newCol>=0){
-                //     if()
-
-                // }
                 if (newRow >= 0 && newCol >= 0) {
                     for (int b = 0; b < mayinCol.size(); b++) {
                         if (mayinRow.get(b) == newRow && mayinCol.get(b) == newCol) {
                             //   if (mineBoard[newRow][newCol] == mineSquare) {
-                            count++
-                            ;                         //    }
+                            count++;
                         }
                     }
                 }
 
-
             }
 
         }
-        System.out.println(counter);
 
         return count;
     }
