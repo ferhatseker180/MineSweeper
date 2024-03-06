@@ -154,25 +154,25 @@ public class MineSweeper {
         if (mineBoard[row][col] == mineSquare) {
             System.out.println("Game Over! Mayına bastınız.");
         } else {
-            System.out.println("Seçtiğiniz kutuda " + count + " adet mayın var.");
             userBoard[row][col] = Integer.toString(count);
-            updateBoard(userBoard, count);
+            updateBoard(userBoard);
         }
     }
 
-    public void updateBoard(String[][] userBoard, int count){
+    public void updateBoard(String[][] userBoard){
         for (int i=0; i< userBoard.length; i++){
             for (int j=0; j<userBoard[0].length; j++){
 
-                if (userBoard[i][j] == mineSquare) {
+                if (userBoard[i][j] == mineSquare || userBoard[i][j] == null) {
                     System.out.print(closeSquare + " ");
                 }
                 else {
                     System.out.print(userBoard[i][j] + " ");
-                }
+               }
             }
             System.out.println();
         }
+        takeUsersAnswer();
     }
 
 
