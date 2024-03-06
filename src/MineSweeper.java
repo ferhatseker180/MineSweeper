@@ -4,13 +4,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MineSweeper {
-    String[][] mineBoard; // itilazie edilecek
+    String[][] mineBoard;
     String[][] userBoard;
     int rowNumber;
-    ArrayList<Integer> mayinRow = new ArrayList<>();
     int colNumber;
-    ArrayList<Integer> mayinCol = new ArrayList<>();
     int mineCount;
+    ArrayList<Integer> mayinRow = new ArrayList<>();
+    ArrayList<Integer> mayinCol = new ArrayList<>();
     String closeSquare = "-";
     String mineSquare = "*";
     Random random = new Random();
@@ -39,10 +39,11 @@ public class MineSweeper {
             mineCount = rowNumber * colNumber / 4;
 
         } while ((rowNumber < 2 || colNumber < 2));
+
     }
 
     // Function that asks the row and column information that the user wants to select in the game
-    public void takeUsersAnswer(String[][] userBoard) {
+    public void takeUsersAnswer() {
         do {
 
             System.out.print("Satır Sayısını Giriniz: ");
@@ -105,10 +106,7 @@ public class MineSweeper {
             }
             System.out.println();
         }
-
         createUserBoard();
-
-
     }
 
     public void checkUserInput(int row, int col) {
@@ -123,30 +121,21 @@ public class MineSweeper {
 
     public int countNeighborMines(int row, int col) {
         int count = 0;
-        int counter = 0;
         // Check the squares around the selected box
         for (int i = -1; i <= 1; i++) {
-            counter++;
             for (int j = -1; j <= 1; j++) {
-
                 int newRow = row + i;
                 int newCol = col + j;
-
                 // As you check each square around, see if it's moving out of area.
-
                 if (newRow >= 0 && newCol >= 0) {
                     for (int b = 0; b < mayinCol.size(); b++) {
                         if (mayinRow.get(b) == newRow && mayinCol.get(b) == newCol) {
-                            //   if (mineBoard[newRow][newCol] == mineSquare) {
                             count++;
                         }
                     }
                 }
-
             }
-
         }
-
         return count;
     }
 
@@ -158,14 +147,14 @@ public class MineSweeper {
         for (int i = 0; i < rowNumber; i++) {
             for (int j = 0; j < colNumber; j++) {
                 if (userBoard[i][j] == mineSquare) {
-                    System.out.print(mineSquare + " ");
+                    System.out.print(closeSquare + " ");
                 } else {
                     System.out.print(closeSquare + " ");
                 }
             }
             System.out.println();
         }
-        takeUsersAnswer(userBoard);
+        takeUsersAnswer();
     }
 
     public void runGame() {
