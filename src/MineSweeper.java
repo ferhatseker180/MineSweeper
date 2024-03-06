@@ -17,14 +17,7 @@ public class MineSweeper {
     Random random = new Random();
     Scanner input = new Scanner(System.in);
 
-
-    public MineSweeper(int rowNumber, int colNumber) { // board'u initilazie ediyor.
-        this.rowNumber = rowNumber;
-        this.colNumber = colNumber;
-        this.mineCount = rowNumber * colNumber / 4;
-        this.userBoard = new String[rowNumber][colNumber];
-        this.mineBoard = new String[rowNumber][colNumber];
-        this.count = 0;
+    public MineSweeper() {
 
     }
 
@@ -121,7 +114,8 @@ public class MineSweeper {
 
     // Function that asks the row and column information that the user wants to select in the game
     public void takeUsersAnswer() {
-        do {
+        int counter = 0;
+        while (counter <= userBoard.length * userBoard[0].length) {
 
             System.out.print("Enter The Number of Rows: ");
             rowNumber = input.nextInt();
@@ -129,18 +123,33 @@ public class MineSweeper {
             colNumber = input.nextInt();
             System.out.println("===========================");
 
-            // It is checked whether the row and column value entered by the user is within the specified range.
             if ((rowNumber < userBoard.length) && (colNumber < userBoard[0].length)) {
-                checkUserInput(rowNumber, colNumber);
+                if (userBoard[rowNumber][colNumber] != null && userBoard[rowNumber][colNumber] != mineSquare) {
+                    System.out.println("Bu alan önceden seçildi tekrar giriniz !!");
+                    continue;
+                }
+
+                if (userBoard[rowNumber][colNumber] == mineSquare) {
+                    checkUserInput(rowNumber, colNumber);
+                    break;
+                }
+                if ((userBoard[rowNumber][colNumber] != (mineSquare))) {
+                    checkUserInput(rowNumber, colNumber);
+                    break;
+                }
+
             } else {
                 System.out.println("You Must Enter The Invalid Row Number Or Column Number so You Must Enter The New Row and Column Number");
             }
+            counter++;
 
-        } while (rowNumber >= userBoard.length || colNumber >= userBoard[0].length);
+        }
+
     }
+    // It is checked whether the row and column value entered by the user is within the specified range.
+
 
     public int countNeighborMines(int row, int col) {
-
 
         count = 0;
         // Check the squares around the selected box
@@ -163,15 +172,15 @@ public class MineSweeper {
 
 
     public void checkUserInput(int row, int col) {
-        int count = countNeighborMines(row, col);
+         count = countNeighborMines(row, col);
 
         if (mineBoard[row][col] == mineSquare) {
             System.out.println("Game Over!! You stepped on a mine.");
+            updateBoard(userBoard);
+        } else {
+            userBoard[row][col] = Integer.toString(count);
+            updateBoard(userBoard);
         }
-        else {
-           userBoard[row][col] = Integer.toString(count);
-             updateBoard(userBoard);
-       }
     }
 
     public void updateBoard(String[][] userBoard) {
@@ -186,7 +195,12 @@ public class MineSweeper {
             }
             System.out.println();
         }
-        takeUsersAnswer();
+        if (mineBoard[rowNumber][colNumber] == mineSquare) {
+
+        } else {
+            takeUsersAnswer();
+        }
+
     }
 
 
