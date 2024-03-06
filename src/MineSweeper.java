@@ -1,3 +1,4 @@
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -5,33 +6,40 @@ import java.util.Scanner;
 public class MineSweeper {
     String[][] mineBoard;
     String[][] userBoard;
-    int rowNumber;
-    int colNumber;
+    int rowNumber;  // tahtanın rowu
+    int colNumber; // tahtanının colu
     int mineCount;
-     ArrayList<Integer> mayinRow = new ArrayList<>();
-    ArrayList<Integer> mayinCol = new ArrayList<>();
+    int[] may_col;
+    int[] may_row;
     String closeSquare = "-";
     String mineSquare = "*";
+    int count;
     Random random = new Random();
     Scanner input = new Scanner(System.in);
 
 
-    public MineSweeper(int rowNumber, int colNumber) {
+    public MineSweeper(int rowNumber, int colNumber) { // board'u initilazie ediyor.
         this.rowNumber = rowNumber;
         this.colNumber = colNumber;
         this.mineCount = rowNumber * colNumber / 4;
         this.userBoard = new String[rowNumber][colNumber];
         this.mineBoard = new String[rowNumber][colNumber];
+        this.count = 0;
 
     }
 
     // Function that asks the user how many rows and columns of a board do you want when the game starts
     public void takeUsersInputAndCreateBoard() {
         do {
-            System.out.print("Satır Sayısını Giriniz: ");
+
+            System.out.print("Enter The Number of Rows: ");
             rowNumber = input.nextInt();
-            System.out.print("Sütun Sayısını Giriniz: ");
+            System.out.print("Enter The Number of Column: ");
             colNumber = input.nextInt();
+
+            if ((rowNumber < 2 || colNumber < 2)) {
+                System.out.println("You entered an incorrect value range! Row and column values must be at least 2");
+            }
 
             mineBoard = new String[rowNumber][colNumber];
             userBoard = new String[rowNumber][colNumber];
@@ -39,24 +47,28 @@ public class MineSweeper {
 
         } while ((rowNumber < 2 || colNumber < 2));
 
+
     }
 
     // In the random function, a random value is first generated and then it is assigned to randomRow and randomCol values to assign randomness to the row and column.
     // Then, it is questioned whether there are mines in the row and col on the mine board. If there are, the mine sign is equalized in this row and column, otherwise the i value is reduced by 1.
     public void generateRandom() {
         try {
-
             takeUsersInputAndCreateBoard();
+
+            may_col = new int[mineCount];
+            may_row = new int[mineCount];
 
             for (int i = 0; i < this.mineCount; i++) {
                 int randomRow = random.nextInt(this.rowNumber);
                 int randomCol = random.nextInt(this.colNumber);
 
                 if (mineBoard[randomRow][randomCol] != mineSquare) {
-                    mayinRow.add(randomRow);
-                    mayinCol.add(randomCol);
+                    may_col[i] = randomCol;
+                    may_row[i] = randomRow;
+
                     mineBoard[randomRow][randomCol] = mineSquare;
-                    userBoard[randomRow][randomCol] = "*";     //mineBoard[randomRow][randomCol];
+                    userBoard[randomRow][randomCol] = mineBoard[randomRow][randomCol];
                 } else {
                     i--;
                 }
@@ -75,7 +87,7 @@ public class MineSweeper {
     public void createMineBoard() {
 
         generateRandom();
-        System.out.println("Mayınların Konumu ");
+        System.out.println("Location of Mines ");
 
         for (int i = 0; i < rowNumber; i++) {
             for (int j = 0; j < colNumber; j++) {
@@ -111,22 +123,26 @@ public class MineSweeper {
     public void takeUsersAnswer() {
         do {
 
-            System.out.print("Satır Sayısını Giriniz: ");
+            System.out.print("Enter The Number of Rows: ");
             rowNumber = input.nextInt();
-            System.out.print("Sütun Sayısını Giriniz: ");
+            System.out.print("Enter The Number of Column: ");
             colNumber = input.nextInt();
             System.out.println("===========================");
 
             // It is checked whether the row and column value entered by the user is within the specified range.
             if ((rowNumber < userBoard.length) && (colNumber < userBoard[0].length)) {
                 checkUserInput(rowNumber, colNumber);
+            } else {
+                System.out.println("You Must Enter The Invalid Row Number Or Column Number so You Must Enter The New Row and Column Number");
             }
 
         } while (rowNumber >= userBoard.length || colNumber >= userBoard[0].length);
     }
 
     public int countNeighborMines(int row, int col) {
-        int count = 0;
+
+
+        count = 0;
         // Check the squares around the selected box
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
@@ -134,8 +150,8 @@ public class MineSweeper {
                 int newCol = col + j;
                 // As you check each square around, see if it's moving out of area.
                 if (newRow >= 0 && newCol >= 0) {
-                    for (int b = 0; b < mayinCol.size(); b++) {
-                        if (mayinRow.get(b) == newRow && mayinCol.get(b) == newCol) {
+                    for (int b = 0; b < may_col.length; b++) {
+                        if (may_row[b] == newRow && may_col[b] == newCol) {
                             count++;
                         }
                     }
@@ -150,23 +166,23 @@ public class MineSweeper {
         int count = countNeighborMines(row, col);
 
         if (mineBoard[row][col] == mineSquare) {
-            System.out.println("Game Over! Mayına bastınız.");
-        } else {
-            userBoard[row][col] = Integer.toString(count);
-            updateBoard(userBoard);
+            System.out.println("Game Over!! You stepped on a mine.");
         }
+        else {
+           userBoard[row][col] = Integer.toString(count);
+             updateBoard(userBoard);
+       }
     }
 
-    public void updateBoard(String[][] userBoard){
-        for (int i=0; i< userBoard.length; i++){
-            for (int j=0; j<userBoard[0].length; j++){
+    public void updateBoard(String[][] userBoard) {
+        for (int i = 0; i < userBoard.length; i++) {
+            for (int j = 0; j < userBoard[0].length; j++) {
 
                 if (userBoard[i][j] == mineSquare || userBoard[i][j] == null) {
                     System.out.print(closeSquare + " ");
-                }
-                else {
+                } else {
                     System.out.print(userBoard[i][j] + " ");
-               }
+                }
             }
             System.out.println();
         }
