@@ -4,23 +4,27 @@ import java.util.Scanner;
 public class MineSweeper {
     String[][] mineBoard;
     String[][] userBoard;
-    int boardRowNumber;  // tahtanın rowu
-    int boardColNumber; // tahtanının colu
+    int boardRowNumber;  // Board Total Row
+    int boardColNumber; // Board Total Column
+    int selectedBoardRowNumber; // User choose row number
+    int selectedBoardColNumber; // User chhose col number
     int mineCount;
     int[] mine_column;
     int[] mine_row;
-    String closeSquare = "-";
-    String mineSquare = "*";
-    int neighborMineCount;
-   int gameStepCounter = 0;
-    Random random = new Random();
-    Scanner input = new Scanner(System.in);
+    String closeSquare = "-"; // Unopened box symbol
+    String mineSquare = "*"; // mine symbol
+    int neighborMineCount; // Number of neighboring mines
+    int gameStepCounter = 0; // Number of steps of the game
+    Random random = new Random(); // Random number generation
+    Scanner input = new Scanner(System.in); // Scanner Class
 
+    // Constructor : I didn't fill constructor because ı don't need constructor in main method so I allow for Java creating constructor automatically.
     public MineSweeper() {
 
     }
 
     // Function that asks the user how many rows and columns of a board do you want when the game starts
+    // Then it checks if the entered values are in a valid range.
     public void takeUserInputAndCreateBoard() {
         do {
 
@@ -44,6 +48,7 @@ public class MineSweeper {
 
     // In the random function, a random value is first generated and then it is assigned to randomRow and randomCol values to assign randomness to the row and column.
     // Then, it is questioned whether there are mines in the row and col on the mine board. If there are, the mine sign is equalized in this row and column, otherwise the i value is reduced by 1.
+    // Also the locations of the mines are stored in an array.
     public void generateRandomNumber() {
         try {
             takeUserInputAndCreateBoard();
@@ -72,14 +77,11 @@ public class MineSweeper {
 
     }
 
-    // Row and column information is received from the user and the number of mines is determined according to this information.
-    // The random function is called and it is checked whether the mine is on the board or not, the derived numbers are ready to be used below.
-    // Each row and col is navigated with a for loop, and if there is a mine, it is printed with a * sign, otherwise a - sign is placed.
-    // If the user enters a value less than 2*2, it asks for row and col again
+    // The mine board is created within this function.
     public void createMineBoard() {
 
         generateRandomNumber();
-        System.out.println("Location of Mines ");
+        System.out.println("========== Location of Mines ==========");
 
         for (int i = 0; i < boardRowNumber; i++) {
             for (int j = 0; j < boardColNumber; j++) {
@@ -107,45 +109,48 @@ public class MineSweeper {
         takeUserAnswer();
     }
 
-    // Function that asks the row and column information that the user wants to select in the game
+    // It asks the row and column information that the user wants to select in the game and calls the function
+    // that queries whether this location information has been entered before, whether there are mines there or whether the game is completed.
     public void takeUserAnswer() {
-
-        while (gameStepCounter <= userBoard.length * userBoard[0].length) {
-
+        // The while loop ends when the user loses or wins the game.
+        while (true) {
             System.out.print("Enter The Number of Rows: ");
-            boardRowNumber = input.nextInt();
+            selectedBoardRowNumber = input.nextInt();
             System.out.print("Enter The Number of Column: ");
-            boardColNumber = input.nextInt();
+            selectedBoardColNumber = input.nextInt();
             System.out.println("===========================");
 
-            if ((boardRowNumber < userBoard.length) && (boardColNumber < userBoard[0].length)) {
-                if (userBoard[boardRowNumber][boardColNumber] != null && userBoard[boardRowNumber][boardColNumber] != mineSquare) {
-                    System.out.println("Bu alan önceden seçildi tekrar giriniz !!");
+            if ((selectedBoardRowNumber < userBoard.length) && (selectedBoardColNumber < userBoard[0].length)) {
+                if (userBoard[selectedBoardRowNumber][selectedBoardColNumber] != null && userBoard[selectedBoardRowNumber][selectedBoardColNumber] != mineSquare) {
+                    System.out.println("This coordinate has been selected before, please enter another coordinate!!");
                     continue;
                 }
 
-                if (userBoard[boardRowNumber][boardColNumber] == mineSquare) {
-                    checkUserInput(boardRowNumber, boardColNumber);
+                if (userBoard[selectedBoardRowNumber][selectedBoardColNumber] == mineSquare) {
+                    checkUserInput(selectedBoardRowNumber, selectedBoardColNumber);
                     break;
                 }
-                if ((userBoard[boardRowNumber][boardColNumber] != (mineSquare))) {
-                    checkUserInput(boardRowNumber, boardColNumber);
+                if ((userBoard[selectedBoardRowNumber][selectedBoardColNumber] != (mineSquare))) {
+                    gameStepCounter++;
+                    checkUserInput(selectedBoardRowNumber, selectedBoardColNumber);
                     break;
                 }
 
+                if (gameStepCounter == boardColNumber * boardRowNumber - mineCount) {
+                    //
+                    checkUserInput(selectedBoardRowNumber, selectedBoardColNumber);
+                    break;
+                }
             } else {
                 System.out.println("You Must Enter The Invalid Row Number Or Column Number so You Must Enter The New Row and Column Number");
             }
-
-            gameStepCounter++;
         }
 
-    }
-    // It is checked whether the row and column value entered by the user is within the specified range.
 
+    }
+    // It calculates to inform the user whether there are any mines in the neighboring areas of the box in the row and column entered by the user and if so, how many there are.
 
     public int countNeighborMines(int row, int col) {
-
         neighborMineCount = 0;
         // Check the squares around the selected box
         for (int i = -1; i <= 1; i++) {
@@ -165,12 +170,11 @@ public class MineSweeper {
         return neighborMineCount;
     }
 
-
+    //It evaluates the row and column information entered by the user, checks whether there are mines there,
+// whether the game is over or whether the game is continuing, and calls the function to update the board.
     public void checkUserInput(int row, int col) {
         neighborMineCount = countNeighborMines(row, col);
-
-        if (mineBoard[row][col] == mineSquare) {
-            System.out.println("Game Over!! You stepped on a mine.");
+        if (mineBoard[row][col] == mineSquare || (gameStepCounter == boardColNumber * boardRowNumber - mineCount)) {
             updateBoard(userBoard);
         } else {
             userBoard[row][col] = Integer.toString(neighborMineCount);
@@ -178,10 +182,10 @@ public class MineSweeper {
         }
     }
 
-    public void updateBoard(String[][] userBoard) {
+    // It checks whether there are mines at the selected points and whether the box in the next row and column has been opened before.
+    public void controlMineOrNull() {
         for (int i = 0; i < userBoard.length; i++) {
             for (int j = 0; j < userBoard[0].length; j++) {
-
                 if (userBoard[i][j] == mineSquare || userBoard[i][j] == null) {
                     System.out.print(closeSquare + " ");
                 } else {
@@ -190,15 +194,43 @@ public class MineSweeper {
             }
             System.out.println();
         }
-        if (mineBoard[boardRowNumber][boardColNumber] == mineSquare) {
-            return;
-        } else {
-            takeUserAnswer();
-        }
-
     }
 
+    // This function updates the user board based on whether the game is won, lost or continued.
+    public void updateBoard(String[][] userBoard) {
+        controlMineOrNull();
+        if (mineBoard[selectedBoardRowNumber][selectedBoardColNumber] == (mineSquare)) {
+            System.out.println("Game Over!! You stepped on a mine.");
+            return;
+        }
 
+        if ((gameStepCounter == boardColNumber * boardRowNumber - mineCount)) {
+            System.out.println("Congratulations!! You completed the game without stepping on a mine.");
+            printFinalStageAnswerBoard();
+            return;
+        }
+
+        if ((gameStepCounter != boardColNumber * boardRowNumber - mineCount) && mineBoard[selectedBoardRowNumber][selectedBoardColNumber] != (mineSquare)) {
+            takeUserAnswer();
+        }
+    }
+
+    // This function allows the user to print a board showing the completed version of the game when they win the game.
+    public void printFinalStageAnswerBoard() {
+        for (int i = 0; i < boardRowNumber; i++) {
+            for (int j = 0; j < boardColNumber; j++) {
+                int neighborCount = countNeighborMines(i, j);
+                if (mineBoard[i][j] == mineSquare) {
+                    System.out.print(mineSquare + " ");
+                } else {
+                    System.out.print(neighborCount + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    // It is the main function in which all functions are collected and will be called within the main structure.
     public void runGame() {
         createMineBoard();
 
