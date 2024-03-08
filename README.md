@@ -74,7 +74,9 @@ User board, mine board, position information of mines in rows and columns were c
 <div style="margin: 20px;">
 
 ![Mine Sweeper Win Condition](src/ProjectImages/win-condition.PNG)
+
 ![Mine Sweeper Lose Condition](src/ProjectImages/lose-condition.PNG)
+
 ![Mine Sweeper Invalid and Used Coordination](src/ProjectImages/invalid and used coordination.PNG)
 
 </div>
