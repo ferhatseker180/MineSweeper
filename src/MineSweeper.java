@@ -1,6 +1,12 @@
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * This is a Minesweeper Game backend project
+ *
+ * @author Ferhat Şeker
+ * @version Java 1.8
+ */
 public class MineSweeper {
     String[][] mineBoard;
     String[][] userBoard;
@@ -79,7 +85,6 @@ public class MineSweeper {
     public void createMineBoard() {
         generateRandomNumber();
         System.out.println("========== Location of Mines ==========");
-
         for (int i = 0; i < boardRowNumber; i++) {
             for (int j = 0; j < boardColNumber; j++) {
                 if (mineBoard[i][j] == mineSquare) {
@@ -220,11 +225,11 @@ public class MineSweeper {
     public void checkGameResult() {
         controlMineOrNull();
         if (mineBoard[selectedBoardRowNumber][selectedBoardColNumber] == (mineSquare)) {
-            checkLoseGame();
+            loseGameMessage();
             return;
         }
         if ((gameStepCounter == boardColNumber * boardRowNumber - mineCount)) {
-            checkWinGame();
+            showWinGameMessage();
             return;
         }
         if ((gameStepCounter != boardColNumber * boardRowNumber - mineCount) && mineBoard[selectedBoardRowNumber][selectedBoardColNumber] != (mineSquare)) {
@@ -234,13 +239,13 @@ public class MineSweeper {
     }
 
     // Evaluation Form 15 : The winning message is printed here, and the function that prints the current board when winning is called here.
-    public void checkWinGame() {
+    public void showWinGameMessage() {
         System.out.println("Congratulations!! You completed the game without stepping on a mine.");
         printFinalStageAnswerBoard();
     }
 
     // Evaluation Form 15 : The losing message is printed here.
-    public void checkLoseGame() {
+    public void loseGameMessage() {
         System.out.println("Game Over!! You stepped on a mine.");
     }
 
