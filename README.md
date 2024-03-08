@@ -78,7 +78,7 @@ User board, mine board, position information of mines in rows and columns were c
 
 <span style="color:green; font-size: 18px;"> Mine Sweeper Invalid and Used Coordination </span>
 
-![Mine Sweeper Invalid and Used Coordination](src/ProjectImages/invalid and used coordination.PNG)
+![Mine Sweeper Invalid and Used Coordination](src/ProjectImages/invalid-and-used-coordination.PNG)
 
 </div>
 
