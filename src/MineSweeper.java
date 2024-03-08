@@ -43,8 +43,6 @@ public class MineSweeper {
             mineCount = boardRowNumber * boardColNumber / 4;
 
         } while ((boardRowNumber < 2 || boardColNumber < 2));
-
-
     }
 
     // In the random function, a random value is first generated and then it is assigned to randomRow and randomCol values to assign randomness to the row and column.
@@ -65,7 +63,6 @@ public class MineSweeper {
                 if (mineBoard[randomRow][randomCol] != mineSquare) {
                     mine_column[i] = randomCol;
                     mine_row[i] = randomRow;
-
                     mineBoard[randomRow][randomCol] = mineSquare;
                     userBoard[randomRow][randomCol] = mineBoard[randomRow][randomCol];
                 } else {
@@ -76,12 +73,10 @@ public class MineSweeper {
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
-
     }
 
     // The mine board is created within this function.
     public void createMineBoard() {
-
         generateRandomNumber();
         System.out.println("========== Location of Mines ==========");
 
@@ -99,7 +94,6 @@ public class MineSweeper {
     }
 
     //A welcome message was printed for the user with the createUserBoard function and the user board designed for the user was written in this function.
-
     public void createUserBoard() {
         System.out.println("========== Welcome to MineSweeper Game ==========");
         for (int i = 0; i < boardRowNumber; i++) {
@@ -148,8 +142,6 @@ public class MineSweeper {
                 System.out.println("You Must Enter The Invalid Row Number Or Column Number so You Must Enter The New Row and Column Number");
             }
         }
-
-
     }
 
     // It calculates to inform the user whether there are any mines in the neighboring areas of the box in the row and column entered by the user and if so, how many there are.
@@ -258,7 +250,6 @@ public class MineSweeper {
     // Evaluation form 6
     public void runGame() {
         createMineBoard();
-
     }
 
 }
