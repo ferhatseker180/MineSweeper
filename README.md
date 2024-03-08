@@ -69,13 +69,14 @@ User board, mine board, position information of mines in rows and columns were c
 <div style="text-align:center; margin:10px;">
 <h3 style="text-align:center; color: yellow">  Game Images </h3>
 <span style="color:green; font-size: 18px;"> Mine Sweeper Win Condition </span>
-</div>
-
-<div style="margin: 20px;">
 
 ![Mine Sweeper Win Condition](src/ProjectImages/win-condition.PNG)
 
+<span style="color:green; font-size: 18px;"> Mine Sweeper Lose Condition </span>
+
 ![Mine Sweeper Lose Condition](src/ProjectImages/lose-condition.PNG)
+
+<span style="color:green; font-size: 18px;"> Mine Sweeper Invalid and Used Coordination </span>
 
 ![Mine Sweeper Invalid and Used Coordination](src/ProjectImages/invalid and used coordination.PNG)
 
