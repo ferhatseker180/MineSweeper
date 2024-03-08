@@ -18,13 +18,14 @@ public class MineSweeper {
     Random random = new Random(); // Random number generation
     Scanner input = new Scanner(System.in); // Scanner Class
 
-    // Constructor : I didn't fill constructor because ı don't need constructor in main method so I allow for Java creating constructor automatically.
+    // Constructor : I didn't fill constructor because I don't need constructor in main method so I allow for Java creating constructor automatically.
     public MineSweeper() {
 
     }
 
     // Function that asks the user how many rows and columns of a board do you want when the game starts
     // Then it checks if the entered values are in a valid range.
+    // Evaluation Form 7
     public void takeUserInputAndCreateBoard() {
         do {
 
@@ -49,6 +50,7 @@ public class MineSweeper {
     // In the random function, a random value is first generated and then it is assigned to randomRow and randomCol values to assign randomness to the row and column.
     // Then, it is questioned whether there are mines in the row and col on the mine board. If there are, the mine sign is equalized in this row and column, otherwise the i value is reduced by 1.
     // Also the locations of the mines are stored in an array.
+    // Evaluation Form 8
     public void generateRandomNumber() {
         try {
             takeUserInputAndCreateBoard();
@@ -111,6 +113,7 @@ public class MineSweeper {
 
     // It asks the row and column information that the user wants to select in the game and calls the function
     // that queries whether this location information has been entered before, whether there are mines there or whether the game is completed.
+    // Evaluation Form 9 and 10 : The row and column information that the user wants to mark is obtained and it is checked whether it is within the valid range.
     public void takeUserAnswer() {
         // The while loop ends when the user loses or wins the game.
         while (true) {
@@ -148,8 +151,9 @@ public class MineSweeper {
 
 
     }
-    // It calculates to inform the user whether there are any mines in the neighboring areas of the box in the row and column entered by the user and if so, how many there are.
 
+    // It calculates to inform the user whether there are any mines in the neighboring areas of the box in the row and column entered by the user and if so, how many there are.
+    // Evaluation Form 12 : The number of neighboring mines is calculated here
     public int countNeighborMines(int row, int col) {
         neighborMineCount = 0;
         // Check the squares around the selected box
@@ -172,6 +176,7 @@ public class MineSweeper {
 
     //It evaluates the row and column information entered by the user, checks whether there are mines there,
 // whether the game is over or whether the game is continuing, and calls the function to update the board.
+    // Evaluation Form 12 : This rule is fulfilled in two separate functions. The countNeighborMines function simply detects how many neighboring mines there are, sends this data to the checkUserInput function and prints it.
     public void checkUserInput(int row, int col) {
         neighborMineCount = countNeighborMines(row, col);
         if (mineBoard[row][col] == mineSquare || (gameStepCounter == boardColNumber * boardRowNumber - mineCount)) {
@@ -197,25 +202,13 @@ public class MineSweeper {
     }
 
     // This function updates the user board based on whether the game is won, lost or continued.
+    // Evaluation Form 11 : In all cases such as winning, losing or continuing, the board is updated in this function.
     public void updateBoard(String[][] userBoard) {
-        controlMineOrNull();
-        if (mineBoard[selectedBoardRowNumber][selectedBoardColNumber] == (mineSquare)) {
-            System.out.println("Game Over!! You stepped on a mine.");
-            return;
-        }
-
-        if ((gameStepCounter == boardColNumber * boardRowNumber - mineCount)) {
-            System.out.println("Congratulations!! You completed the game without stepping on a mine.");
-            printFinalStageAnswerBoard();
-            return;
-        }
-
-        if ((gameStepCounter != boardColNumber * boardRowNumber - mineCount) && mineBoard[selectedBoardRowNumber][selectedBoardColNumber] != (mineSquare)) {
-            takeUserAnswer();
-        }
+        checkGameResult();
     }
 
     // This function allows the user to print a board showing the completed version of the game when they win the game.
+    // Evaluation Form 15
     public void printFinalStageAnswerBoard() {
         for (int i = 0; i < boardRowNumber; i++) {
             for (int j = 0; j < boardColNumber; j++) {
@@ -230,7 +223,39 @@ public class MineSweeper {
         }
     }
 
+    // Evaluation Form 13 : As mentioned in Rule 11, it updates the board and suppresses the message that you have lost the game if a mine has been stepped on in the current table.
+    // Evaluation Form 14 : As mentioned in Rule 11, it updates the board and informs you that you have won if the game is completed without hitting a mine on the updated table.
+    public void checkGameResult() {
+        controlMineOrNull();
+        if (mineBoard[selectedBoardRowNumber][selectedBoardColNumber] == (mineSquare)) {
+            checkLoseGame();
+            return;
+        }
+        if ((gameStepCounter == boardColNumber * boardRowNumber - mineCount)) {
+            checkWinGame();
+            return;
+        }
+        if ((gameStepCounter != boardColNumber * boardRowNumber - mineCount) && mineBoard[selectedBoardRowNumber][selectedBoardColNumber] != (mineSquare)) {
+            takeUserAnswer();
+        }
+
+    }
+
+    // Evaluation Form 15 : The winning message is printed here, and the function that prints the current board when winning is called here.
+    public void checkWinGame() {
+        System.out.println("Congratulations!! You completed the game without stepping on a mine.");
+        printFinalStageAnswerBoard();
+    }
+
+    // Evaluation Form 15 : The losing message is printed here.
+    public void checkLoseGame() {
+        System.out.println("Game Over!! You stepped on a mine.");
+    }
+
+
     // It is the main function in which all functions are collected and will be called within the main structure.
+    // This is the main function with which the game is launched. The game is started by calling it within the Main method.
+    // Evaluation form 6
     public void runGame() {
         createMineBoard();
 
