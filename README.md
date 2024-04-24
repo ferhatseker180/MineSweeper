@@ -4,9 +4,8 @@
 </div>
 
 ---
-
-<div style="margin:10px;">
-<h2 style="text-align:center; color: yellow"> Description Of The Game </h2>
+<div style="margin:10px; border:">
+<h2 style="text-align:center; color: yellow"> Description Of The Game </h2> 
 <p> Minesweeper game is a game that has been and continues to be played very popularly around the world.
 In this game, the user is asked the size of the board they want to play and the user determines the size of the board himself, provided that the rows and columns are not less than 2 units.
 The user's board contains 1/4 of the number of rows and columns of mines he selected when the game starts.
